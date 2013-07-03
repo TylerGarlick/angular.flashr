@@ -42,3 +42,9 @@ angular.module('App')
 		}
 	);
 ```
+
+NuGet Installation
+--------------
+```c#
+Install-Package angular-flashr
+```
