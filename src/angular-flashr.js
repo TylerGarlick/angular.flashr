@@ -2,13 +2,19 @@
 angular.module('flashr', [])
     .factory('flashr', ['$rootScope',
         function ($rootScope) {
-            var flashes = [];
+            var flashes = [], 
+				toastType = {
+					error: 		'error',
+					info: 		'info',
+					success: 	'success',
+					warning: 	'warning'
+			    };
 
             // when the route changes, flash the "later" messages
             $rootScope.$on('$routeChangeSuccess', function () {
                 for (var i = 0; i < flashes; i++) {
                     var flash = flashes[i];
-                    toast(flash.type, flash.message);
+                    toast(flash.type, flash.msg);
                 }
                 flashes = [];
             });
@@ -29,36 +35,36 @@ angular.module('flashr', [])
             };
 
             function nowSuccess(message) {
-                toast('success', message);
+                toast(toastType.success, message);
             }
 
             function nowInfo(message) {
-                toast('info', message);
+                toast(toastType.info, message);
             }
             function nowWarning(message) {
-                toast('warning', message);
+                toast(toastType.warning, message);
             }
             function nowError(message) {
-                toast('error', message);
+                toast(toastType.error, message);
             }
 
             function laterSuccess(message) {
-                flashes.push({ type: 'success', message: message });
+                flashes.push({ type: toastType.success, msg: message });
             }
 
             function laterInfo(message) {
-                flashes.push({ type: 'info', message: message });
+                flashes.push({ type: toastType.info, msg: message });
             }
 
             function laterWarning(message) {
-                flashes.push({ type: 'warning', message: message });
+                flashes.push({ type: toastType.warning, msg: message });
             }
 
             function laterError(message) {
-                flashes.push({ type: 'error', message: message });
+                flashes.push({ type: toastType.error, msg: message });
             }
 
             function toast(type, message) {
-                toastr[type] = message;
+                toastr[type](message);
             }
         }]);
