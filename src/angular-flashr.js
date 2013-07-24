@@ -2,21 +2,22 @@
 angular.module('flashr', [])
     .factory('flashr', ['$rootScope',
         function ($rootScope) {
-            var flashes = [], 
-				toastType = {
-					error: 		'error',
-					info: 		'info',
-					success: 	'success',
-					warning: 	'warning'
-			    };
+            var _lastToast = null;
+            var _toasts = [];
+            var _toastType = {
+                error: 'error',
+                info: 'info',
+                success: 'success',
+                warning: 'warning'
+            };
 
             // when the route changes, flash the "later" messages
             $rootScope.$on('$routeChangeSuccess', function () {
-                for (var i = 0; i < flashes; i++) {
-                    var flash = flashes[i];
-                    toast(flash.type, flash.msg);
+                for (var i = 0; i < _toasts.length; i++) {
+                    var toast = _toasts[i];
+                    toast(toast.type, toast.msg);
+                    _toasts = _.difference(toast, _toasts);
                 }
-                flashes = [];
             });
 
             return {
@@ -35,36 +36,42 @@ angular.module('flashr', [])
             };
 
             function nowSuccess(message) {
-                toast(toastType.success, message);
+                toast(_toastType.success, message);
             }
 
             function nowInfo(message) {
-                toast(toastType.info, message);
+                toast(_toastType.info, message);
             }
+
             function nowWarning(message) {
-                toast(toastType.warning, message);
+                toast(_toastType.warning, message);
             }
+
             function nowError(message) {
-                toast(toastType.error, message);
+                toast(_toastType.error, message);
             }
 
             function laterSuccess(message) {
-                flashes.push({ type: toastType.success, msg: message });
+                _toasts.push({ type: _toastType.success, msg: message });
             }
 
             function laterInfo(message) {
-                flashes.push({ type: toastType.info, msg: message });
+                _toasts.push({ type: _toastType.info, msg: message });
             }
 
             function laterWarning(message) {
-                flashes.push({ type: toastType.warning, msg: message });
+                _toasts.push({ type: _toastType.warning, msg: message });
             }
 
             function laterError(message) {
-                flashes.push({ type: toastType.error, msg: message });
+                _toasts.push({ type: _toastType.error, msg: message });
             }
 
             function toast(type, message) {
-                toastr[type](message);
+                if (_lastToast != null) {
+                    toastr.clear(_lastToast);
+                    _lastToast = null;
+                }
+                _lastToast = toastr[type](message);
             }
         }]);
