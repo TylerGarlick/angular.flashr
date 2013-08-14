@@ -48,3 +48,9 @@ NuGet Installation
 ```c#
 Install-Package angular-flashr
 ```
+
+Bower Installation
+--------------
+```js
+bower install angular.flashr
+```
