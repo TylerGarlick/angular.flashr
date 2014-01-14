@@ -32,6 +32,12 @@ angular.module('flashr', [])
                     info: laterInfo,
                     warning: laterWarning,
                     error: laterError
+                },
+                clear: function() {
+                    if (_lastToast != null) {
+                        toastr.clear(_lastToast);
+                        _lastToast = null;
+                    }
                 }
             };
 
